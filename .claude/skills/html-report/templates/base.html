@@ -65,12 +65,13 @@
     pre.has-copy { position: relative; }
 
     @media (max-width: 639px) {
-      .toc { display: flex; gap: .5rem; overflow-x: auto; padding-bottom: .75rem; scrollbar-width: thin; }
-      .toc > div { display: none; }
-      .toc a { min-height: 44px; display: flex; align-items: center; white-space: nowrap; padding: .5rem .75rem; border: 1px solid currentColor; border-radius: 999px; }
+      .toc { display: none; }
       button, input, select, summary { min-height: 44px; }
       pre, table { max-width: 100%; }
     }
+    .horizontal-scroll { overflow-x: auto; overscroll-behavior-inline: contain; scrollbar-width: thin; }
+    .horizontal-scroll > .wide-chart { min-width: 680px; }
+    .horizontal-scroll > table { min-width: 720px; }
     html[data-client="android-meshnet"] { font-size: 17px; }
     html[data-client="android-meshnet"] body > .fixed { top: auto !important; bottom: 1rem; }
     html[data-client="android-meshnet"] button,

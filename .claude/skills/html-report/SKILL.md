@@ -49,7 +49,7 @@ Read `config.json`, then apply any values from the ignored `config.local.json` b
    - What's the headline finding? (Goes at the top, big.)
    - What sections does it have?
    - For each section, which interactive element fits? (data → chart, comparison → tabs, code → highlighted block, long → collapsible, etc.)
-   - Will it have a TOC? (Yes if >2 sections.)
+   - Will it have a TOC? Use a sticky TOC on desktop when useful. On mobile, omit it or use one collapsed native disclosure; never use a horizontally scrolling row of navigation pills.
 
 2. **Generate ONE self-contained HTML file** at `<output_dir>/<YYYY-MM-DD>-<slug>.html`.
    - Slug should be short, kebab-case, descriptive (`gpt5-vs-claude-benchmark`, not `report-1`).
@@ -82,7 +82,7 @@ Return the publish script's URL verbatim.
 - **Dark mode** with a toggle, persisted to localStorage.
 - **Title + description + OG tags** in `<head>`.
 - **Prefers-reduced-motion respected** — no jarring animations for users who opted out.
-- **Sticky TOC** for any report with >2 top-level sections.
+- **Adaptive navigation** — use a sticky TOC for long desktop reports; omit it or use a collapsed native disclosure on mobile.
 - **Anchor links** on all section headings (`id="..."`).
 - **No inline `style=""`** — use a single `<style>` block.
 - **No hardcoded light-mode colors** — use Tailwind's `dark:` variants or CSS variables.
@@ -91,6 +91,8 @@ Return the publish script's URL verbatim.
 
 - **Tables → DataTables.js** (sort, filter, paginate). Drop-in: load `datatables.net` CDN, wrap with `$('table').DataTable()`.
 - **Numeric data → Chart.js** (bar/line/pie/scatter/radar). Always set `responsive: true, maintainAspectRatio: false`.
+- **Dense chart axes → horizontal scroll.** For more than six X-axis categories on mobile, put a legible minimum-width chart inside an overflow wrapper instead of compressing labels.
+- **Wide tables → horizontal scroll.** Give the table a content-driven minimum width inside an overflow wrapper; never squeeze columns until body text wraps word-by-word.
 - **Code → highlight.js**, plus a "copy" button per block.
 - **Comparisons (3+ alternatives) → tabs**. Hand-roll with `<input type="radio">` + CSS or use the snippet in `templates/base.html`.
 - **Long detail → `<details>` collapsibles** with descriptive `<summary>`.
@@ -110,6 +112,8 @@ Return the publish script's URL verbatim.
 - ❌ Light-only color choices.
 - ❌ "Click here" links — use descriptive link text.
 - ❌ Charts that overflow on mobile.
+- ❌ Horizontally scrolling pill rows for a mobile table of contents.
+- ❌ Shrinking dense charts or wide tables to viewport width until labels become unreadable.
 - ❌ Designing at the phone's 1440 physical pixels. Browser layout uses CSS pixels and varies with Android display scaling.
 
 ## Example: planning a "model benchmark" report
