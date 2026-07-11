@@ -39,8 +39,7 @@ Read `config.json`, then apply any values from the ignored `config.local.json` b
 
 - `output_dir` — private report directory; default `~/Documents/html-reports`.
 - `private_base_url` — Meshnet report-server URL. Return this URL plus the filename.
-- `android_meshnet_ips` — server-recognized Android peers. The server adds `data-client="android-meshnet"` to HTML responses from these IPs.
-- `mobile_css_viewport` — validation viewport in CSS pixels. Raw display pixels are not CSS pixels.
+- `validation_viewports` — required mobile and desktop render sizes in CSS pixels. Raw display pixels are not CSS pixels.
 - `local_repo_path`, `reports_dir`, `base_url` — existing GitHub Pages publishing settings.
 
 ## Workflow
@@ -58,7 +57,7 @@ Read `config.json`, then apply any values from the ignored `config.local.json` b
    - Custom CSS in a single `<style>` block; custom JS in a single `<script>` block at the bottom.
    - Set `<title>`, `<meta name="description">`, `<meta name="viewport">`, and Open Graph tags (the report will be shared as a link — OG tags make link previews work).
 
-3. **Validate.** Check JavaScript syntax and render at desktop width plus the configured mobile CSS viewport. Confirm no horizontal page scrolling, clipped controls, illegible chart labels, or hover-only interactions.
+3. **Validate.** Check JavaScript syntax and render the same file at every configured viewport. Confirm no page-level horizontal scrolling, clipped controls, illegible chart labels, or hover-only interactions.
 
 4. **Return the private URL.** Join `private_base_url` and the filename. Verify it responds before returning it; do not fabricate a URL.
 
@@ -77,8 +76,9 @@ Return the publish script's URL verbatim.
 
 - **Single file**, no build step, CDN-only deps.
 - **Mobile-responsive** — test in your head: does it work on a 375px viewport?
-- **Mobile-first** — validate from 360–520 CSS px wide and at the configured phone viewport. Use a 16px minimum body font, 44px touch targets, single-column primary flow, horizontally scrollable table wrappers, and charts that remain legible without hover.
-- **Android profile aware** — add targeted improvements under `html[data-client="android-meshnet"]` when useful. Do not rely on this profile for baseline responsiveness.
+- **Mobile-first** — validate from 360–520 CSS px wide and at the configured mobile viewport. Use a 16px minimum body font, 44px touch targets, single-column primary flow, horizontally scrollable table wrappers, and charts that remain legible without hover.
+- **Desktop-complete** — validate at the configured desktop viewport and progressively enhance spacing, navigation, and multi-column layout without changing content or URL.
+- **One responsive artifact** — serve identical HTML to every device. Do not generate separate phone/desktop editions or rely on IP, User-Agent, or server-injected device styles.
 - **Dark mode** with a toggle, persisted to localStorage.
 - **Title + description + OG tags** in `<head>`.
 - **Prefers-reduced-motion respected** — no jarring animations for users who opted out.
@@ -115,6 +115,7 @@ Return the publish script's URL verbatim.
 - ❌ Horizontally scrolling pill rows for a mobile table of contents.
 - ❌ Shrinking dense charts or wide tables to viewport width until labels become unreadable.
 - ❌ Designing at the phone's 1440 physical pixels. Browser layout uses CSS pixels and varies with Android display scaling.
+- ❌ Device-specific HTML files, URLs, request detection, or server-side style injection.
 
 ## Example: planning a "model benchmark" report
 

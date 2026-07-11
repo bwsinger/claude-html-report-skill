@@ -66,19 +66,13 @@
 
     @media (max-width: 639px) {
       .toc { display: none; }
+      body > .fixed { top: auto !important; bottom: 1rem; }
       button, input, select, summary { min-height: 44px; }
       pre, table { max-width: 100%; }
     }
     .horizontal-scroll { overflow-x: auto; overscroll-behavior-inline: contain; scrollbar-width: thin; }
     .horizontal-scroll > .wide-chart { min-width: 680px; }
     .horizontal-scroll > table { min-width: 720px; }
-    html[data-client="android-meshnet"] { font-size: 17px; }
-    html[data-client="android-meshnet"] body > .fixed { top: auto !important; bottom: 1rem; }
-    html[data-client="android-meshnet"] button,
-    html[data-client="android-meshnet"] input,
-    html[data-client="android-meshnet"] select,
-    html[data-client="android-meshnet"] summary { min-height: 44px; }
-
     /* Tab pattern: pure CSS, no JS */
     .tabs > input[type="radio"] { display: none; }
     .tabs > label { cursor: pointer; padding: .5rem 1rem; border-bottom: 2px solid transparent; }

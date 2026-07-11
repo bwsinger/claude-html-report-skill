@@ -1,10 +1,15 @@
 {
   "output_dir": "~/Documents/html-reports",
   "private_base_url": "",
-  "android_meshnet_ips": [],
-  "mobile_css_viewport": {
-    "width": 450,
-    "height": 990
+  "validation_viewports": {
+    "mobile": {
+      "width": 450,
+      "height": 990
+    },
+    "desktop": {
+      "width": 1440,
+      "height": 900
+    }
   },
   "local_repo_path": "",
   "reports_dir": "reports",
