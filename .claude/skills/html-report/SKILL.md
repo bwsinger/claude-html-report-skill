@@ -1,11 +1,11 @@
 ---
 name: html-report
-description: Generate a rich, INTERACTIVE HTML report (not markdown!) and publish it to GitHub Pages. Use when the user asks for a "report", "writeup", "summary page", "dashboard", "share link", or anything that benefits from interactivity, charts, sortable tables, tabs, search, syntax highlighting, math, diagrams, or visual polish that markdown cannot deliver. Returns a public URL the user can share.
+description: Generate a rich, interactive, mobile-first HTML report instead of markdown and return a browser-ready private or public URL. Use when the user asks for a report, writeup, summary page, dashboard, share link, or any output that benefits from charts, sortable tables, tabs, search, diagrams, or visual polish. Save to the configured private report server by default; publish to GitHub Pages only when explicitly requested.
 ---
 
 # html-report
 
-Generate a self-contained, polished, **interactive** HTML report and publish it to the user's GitHub Pages site.
+Generate a self-contained, polished, **interactive** HTML report. Save it to the user's private report server by default; publish it to GitHub Pages only when explicitly requested.
 
 ## Why this skill exists (read this first)
 
@@ -35,12 +35,13 @@ Every report you produce should use **at least three** of these. If you can't fi
 
 ## Configuration
 
-Read `config.json` next to this file. Fields:
-- `local_repo_path` — local clone of the GitHub Pages repo. **Optional** — if empty, the script auto-detects it from where this skill lives on disk (works whether installed in-place or symlinked).
-- `reports_dir` — subdirectory for reports (default: `reports`).
-- `base_url` — GitHub Pages base URL. **Optional** — auto-detected from `git remote origin` if empty.
+Read `config.json`, then apply any values from the ignored `config.local.json` beside it. Fields:
 
-The user should normally not need to edit anything.
+- `output_dir` — private report directory; default `~/Documents/html-reports`.
+- `private_base_url` — Meshnet report-server URL. Return this URL plus the filename.
+- `android_meshnet_ips` — server-recognized Android peers. The server adds `data-client="android-meshnet"` to HTML responses from these IPs.
+- `mobile_css_viewport` — validation viewport in CSS pixels. Raw display pixels are not CSS pixels.
+- `local_repo_path`, `reports_dir`, `base_url` — existing GitHub Pages publishing settings.
 
 ## Workflow
 
@@ -50,14 +51,18 @@ The user should normally not need to edit anything.
    - For each section, which interactive element fits? (data → chart, comparison → tabs, code → highlighted block, long → collapsible, etc.)
    - Will it have a TOC? (Yes if >2 sections.)
 
-2. **Generate ONE self-contained HTML file** at `<repo>/<reports_dir>/<YYYY-MM-DD>-<slug>.html`.
+2. **Generate ONE self-contained HTML file** at `<output_dir>/<YYYY-MM-DD>-<slug>.html`.
    - Slug should be short, kebab-case, descriptive (`gpt5-vs-claude-benchmark`, not `report-1`).
    - Start from `templates/base.html` — it already wires up Tailwind, highlight.js, Chart.js, Mermaid, KaTeX, dark mode, sticky TOC, and print styles.
    - All libraries via CDN (no build step).
    - Custom CSS in a single `<style>` block; custom JS in a single `<script>` block at the bottom.
    - Set `<title>`, `<meta name="description">`, `<meta name="viewport">`, and Open Graph tags (the report will be shared as a link — OG tags make link previews work).
 
-3. **Publish.** Run the publish script from anywhere:
+3. **Validate.** Check JavaScript syntax and render at desktop width plus the configured mobile CSS viewport. Confirm no horizontal page scrolling, clipped controls, illegible chart labels, or hover-only interactions.
+
+4. **Return the private URL.** Join `private_base_url` and the filename. Verify it responds before returning it; do not fabricate a URL.
+
+5. **Publish publicly only when explicitly requested.** Copy the report into `<repo>/<reports_dir>/`, then run:
    ```bash
    python3 <skill-dir>/scripts/publish.py <html-path-relative-to-repo> "<title>" "<one-line description>"
    ```
@@ -66,12 +71,14 @@ The user should normally not need to edit anything.
    - `git add -A`, `git commit -m "report: <title>"`, `git push`.
    - Prints the public URL.
 
-4. **Return the URL** to the user. Don't fabricate it — use the script's output.
+Return the publish script's URL verbatim.
 
 ## Quality bar — required for every report
 
 - **Single file**, no build step, CDN-only deps.
 - **Mobile-responsive** — test in your head: does it work on a 375px viewport?
+- **Mobile-first** — validate from 360–520 CSS px wide and at the configured phone viewport. Use a 16px minimum body font, 44px touch targets, single-column primary flow, horizontally scrollable table wrappers, and charts that remain legible without hover.
+- **Android profile aware** — add targeted improvements under `html[data-client="android-meshnet"]` when useful. Do not rely on this profile for baseline responsiveness.
 - **Dark mode** with a toggle, persisted to localStorage.
 - **Title + description + OG tags** in `<head>`.
 - **Prefers-reduced-motion respected** — no jarring animations for users who opted out.
@@ -103,6 +110,7 @@ The user should normally not need to edit anything.
 - ❌ Light-only color choices.
 - ❌ "Click here" links — use descriptive link text.
 - ❌ Charts that overflow on mobile.
+- ❌ Designing at the phone's 1440 physical pixels. Browser layout uses CSS pixels and varies with Android display scaling.
 
 ## Example: planning a "model benchmark" report
 
@@ -118,11 +126,11 @@ The user should normally not need to edit anything.
 
 ## Draft mode
 
-If the user says "just draft it" or "don't push yet", pass `--draft` to the publish script. It updates the manifest locally, skips commit + push, and prints the local file path instead of the URL.
+Private reports are never committed or pushed. If a public GitHub Pages report is requested as a draft, pass `--draft` to the publish script.
 
 ## After publishing
 
-The script prints the URL. Pass it through verbatim. If the script printed a warning about a failed push, surface that to the user — don't bury it.
+Return the verified private URL or the public URL printed by the publishing script. Surface any failed validation, server request, commit, or push.
 
 ## When NOT to use this skill
 

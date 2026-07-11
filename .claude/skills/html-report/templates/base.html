@@ -64,6 +64,20 @@
     .copy-btn { position: absolute; top: .5rem; right: .5rem; }
     pre.has-copy { position: relative; }
 
+    @media (max-width: 639px) {
+      .toc { display: flex; gap: .5rem; overflow-x: auto; padding-bottom: .75rem; scrollbar-width: thin; }
+      .toc > div { display: none; }
+      .toc a { min-height: 44px; display: flex; align-items: center; white-space: nowrap; padding: .5rem .75rem; border: 1px solid currentColor; border-radius: 999px; }
+      button, input, select, summary { min-height: 44px; }
+      pre, table { max-width: 100%; }
+    }
+    html[data-client="android-meshnet"] { font-size: 17px; }
+    html[data-client="android-meshnet"] body > .fixed { top: auto !important; bottom: 1rem; }
+    html[data-client="android-meshnet"] button,
+    html[data-client="android-meshnet"] input,
+    html[data-client="android-meshnet"] select,
+    html[data-client="android-meshnet"] summary { min-height: 44px; }
+
     /* Tab pattern: pure CSS, no JS */
     .tabs > input[type="radio"] { display: none; }
     .tabs > label { cursor: pointer; padding: .5rem 1rem; border-bottom: 2px solid transparent; }
@@ -88,7 +102,7 @@
   </button>
 </div>
 
-<div class="max-w-6xl mx-auto px-6 py-12 lg:grid lg:grid-cols-[200px_minmax(0,1fr)] lg:gap-12">
+<div class="max-w-6xl mx-auto px-4 sm:px-6 pt-20 pb-12 sm:py-12 lg:grid lg:grid-cols-[200px_minmax(0,1fr)] lg:gap-12">
 
   <!-- Sticky TOC -->
   <nav class="toc lg:sticky lg:top-12 self-start text-sm mb-8 lg:mb-0 no-print">
@@ -146,10 +160,7 @@
     pre.classList.add('has-copy');
     const btn = document.createElement('button');
     btn.textContent = 'copy';
-    btn.className = 'copy-btn no-print text-xs px-2 py-1 rounded bg-zinc-700 text-zinc-100 hover:bg-zinc-600 opacity-0 group-hover:opacity-100 transition-opacity';
-    btn.style.opacity = '0.5';
-    btn.addEventListener('mouseenter', () => btn.style.opacity = '1');
-    btn.addEventListener('mouseleave', () => btn.style.opacity = '0.5');
+    btn.className = 'copy-btn no-print text-xs px-2 py-1 rounded bg-zinc-700 text-zinc-100 hover:bg-zinc-600 opacity-50 hover:opacity-100 transition-opacity';
     btn.addEventListener('click', async () => {
       await navigator.clipboard.writeText(code.innerText);
       const old = btn.textContent;

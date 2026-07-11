@@ -1,0 +1,4 @@
+interface:
+  display_name: "HTML Report"
+  short_description: "Create interactive, mobile-first HTML reports"
+  default_prompt: "Use $html-report to create a polished interactive report and return its private browser URL."
