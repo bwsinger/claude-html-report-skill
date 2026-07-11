@@ -9,7 +9,7 @@ Generate a self-contained, polished, **interactive** HTML report. Save it to the
 
 ## Why this skill exists (read this first)
 
-Claude defaults to markdown for everything. Markdown is fine for plain text, but it's a **failure mode** for any output that has data, comparisons, code, or detail that the reader will want to navigate. This skill exists to push you toward HTML's strengths. If you generate a wall of `<p>` tags and `<h2>` headings, **you have wasted this skill** — markdown would have done the same job.
+Codex often returns markdown by default. Markdown is fine for plain text, but it's a **failure mode** for any output that has data, comparisons, code, or detail that the reader will want to navigate. This skill exists to push you toward HTML's strengths. If you generate a wall of `<p>` tags and `<h2>` headings, **you have wasted this skill** — markdown would have done the same job.
 
 Concretely, HTML can do all of these and markdown cannot:
 
